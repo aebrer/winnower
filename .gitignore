@@ -3,6 +3,10 @@
 auth.json
 data/
 env/
+pynder/
+
+CNN.ipynb
+prepare_data.ipynb
 
 processed_images.npy
 processed_labels.npy
