@@ -3,7 +3,7 @@ import skimage.io as io
 import pynder
 import matplotlib.pyplot as plt
 from pynder_helpers import get_access_token, get_login_credentials
-from io_helpers import save_image, save_bio, save_age
+from io_helpers import save_image, save_bio, save_age, save_master
 
 io.use_plugin('matplotlib', 'imshow')
 
@@ -61,6 +61,8 @@ while True:
                 else:
                     save_bio(bio, False)
 
+            img_urls = []
+
             for photo in photos:
 
                 image = imread(photo)
@@ -71,7 +73,7 @@ while True:
                 ans = input(input_string).lower()
 
                 if ans == ".":
-                    save_image(image, photo, True)
+                    img_urls.append(save_image(image, photo, True))
                     save_age(user.age, True)
 
                 elif ans == "l":
@@ -80,7 +82,7 @@ while True:
                     except:
                         pass
 
-                    save_image(image, photo, True)
+                    img_urls.append(save_image(image, photo, True))
                     save_age(user.age, True)
 
                 elif ans == "d":
@@ -89,28 +91,39 @@ while True:
                     except:
                         pass
 
-                    save_image(image, photo, False)
+                    img_urls.append(save_image(image, photo, False))
                     save_age(user.age, False)
 
                 elif ans == "...":
                     break
                 else:
-                    save_image(image, photo, False)
+                    img_urls.append(save_image(image, photo, False))
                     save_age(user.age, False)
 
             ans = input("Hit enter for next user, 'l' to like, or 'd' to dislike:\n")
 
+            bio = " ".join(bio.split())
+
             if ans == "l":
+
                 try:
                     user.like()
                 except:
                     pass
 
+                save_master(img_urls, age, bio, True)
+
+
             elif ans == "d":
+
                 try:
                     user.dislike()
                 except:
                     pass
+
+                save_master(img_urls, age, bio, False)
+
+
 
         except Exception as e:
 

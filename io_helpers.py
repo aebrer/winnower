@@ -26,6 +26,8 @@ def save_image(image, name, liked):
 
     imsave(filename, image)
 
+    return filename
+
 
 def save_bio(bio, liked):
 
@@ -55,4 +57,26 @@ def save_age(age, liked):
             ages.write(
                 str(age) + "\t" + "0" + "\n"
             )
+
+def save_master(img_urls, age, bio, liked):
+
+    filename = base_folder + "/masterlist.tsv"
+
+    img_string = ""
+
+    for img_url in img_urls:
+        img_string = img_string + img_url + "\t"
+
+    with open(filename, "a") as masterlist:
+
+        if liked:
+            masterlist.write(
+                "1" + "\t" + str(age) + "\t" + bio + "\t" + img_string + "\t" + "\n"
+            )
+
+        else:
+            masterlist.write(
+                "0" + "\t" + str(age) + "\t" + bio + "\t" + img_string + "\t" + "\n"
+            )
+
 
