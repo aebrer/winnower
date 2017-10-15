@@ -108,8 +108,8 @@ while True:
 
                 try:
                     user.like()
-                except:
-                    pass
+                except Exception as e:
+                    print(e)
 
                 save_master(img_urls, age, bio, True)
 
@@ -118,8 +118,8 @@ while True:
 
                 try:
                     user.dislike()
-                except:
-                    pass
+                except Exception as e:
+                    print(e)
 
                 save_master(img_urls, age, bio, False)
 

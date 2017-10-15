@@ -5,8 +5,6 @@ data/
 env/
 pynder/
 
-CNN.ipynb
-prepare_data.ipynb
 
 processed_images.npy
 processed_labels.npy
@@ -110,3 +108,8 @@ ENV/
 
 # mypy
 .mypy_cache/
+.idea/misc.xml
+.idea/modules.xml
+.idea/tinder_ai.iml
+.idea/vcs.xml
+.idea/workspace.xml
