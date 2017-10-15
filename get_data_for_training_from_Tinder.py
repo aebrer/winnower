@@ -4,6 +4,8 @@ import pynder
 import matplotlib.pyplot as plt
 from pynder_helpers import get_access_token, get_login_credentials
 from io_helpers import save_image, save_bio, save_age, save_master
+import pynder.errors as errors
+
 
 io.use_plugin('matplotlib', 'imshow')
 
@@ -11,6 +13,7 @@ email, password, FBID = get_login_credentials()
 FBTOKEN = get_access_token(email, password)
 session = pynder.Session(facebook_id=FBID, facebook_token=FBTOKEN)
 print("Session started..")
+
 
 while True:
 
@@ -44,18 +47,6 @@ while True:
 
                 if ans == "...":
                     break
-                elif ans == "l":
-                    try:
-                        user.like()
-                    except:
-                        pass
-                    save_bio(bio, True)
-                elif ans == "d":
-                    try:
-                        user.dislike()
-                    except:
-                        pass
-                    save_bio(bio, False)
                 elif ans == ".":
                     save_bio(bio, True)
                 else:
@@ -76,48 +67,28 @@ while True:
                     img_urls.append(save_image(image, photo, True))
                     save_age(user.age, True)
 
-                elif ans == "l":
-                    try:
-                        user.like()
-                    except:
-                        pass
-
-                    img_urls.append(save_image(image, photo, True))
-                    save_age(user.age, True)
-
-                elif ans == "d":
-                    try:
-                        user.dislike()
-                    except:
-                        pass
-
-                    img_urls.append(save_image(image, photo, False))
-                    save_age(user.age, False)
-
                 elif ans == "...":
                     break
                 else:
                     img_urls.append(save_image(image, photo, False))
                     save_age(user.age, False)
 
-            ans = input("Hit enter for next user, 'l' to like, or 'd' to dislike:\n")
+            ans = input("Hit enter to dislike user, 'l' to like:\nThis will actually submit to Tinder.\n")
 
             bio = " ".join(bio.split())
 
             if ans == "l":
 
                 try:
-                    user.like()
+                    print(user.like())
                 except Exception as e:
                     print(e)
 
                 save_master(img_urls, age, bio, True)
 
-
-            elif ans == "d":
-
+            else:
                 try:
-                    user.dislike()
+                    print(user.dislike())
                 except Exception as e:
                     print(e)
 
