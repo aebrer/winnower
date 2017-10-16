@@ -10,31 +10,34 @@ from skimage.transform import resize
 img_size = 100
 faces_in_image_limit = 1
 
-
-def extract_faces(img):
+def extract_faces(image):
 
     face_cascade = cv2.CascadeClassifier('utils/haarcascade_frontalface_default.xml')
     eye_cascade = cv2.CascadeClassifier('utils/haarcascade_eye.xml')
 
+    img = cv2.imread(image)
     imageDataFin = []
 
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    gray = cv2.equalizeHist(gray)
     faces = face_cascade.detectMultiScale(gray)
 
-    for (x, y, w, h) in faces:
-        roi_gray = gray[y:y + h, x:x + w]
-        roi_color = img[y:y + h, x:x + w]
+    if len(faces) <= faces_in_image_limit and len(faces) != 0:
 
-        eyes = eye_cascade.detectMultiScale(roi_gray)
+        for (x, y, w, h) in faces:
 
-        if len(eyes) >= 1:
-            im = resize(roi_color, (img_size, img_size))
-            imageDataFin.append(im)
+            roi_gray = gray[y:y + h, x:x + w]
+            roi_color = img[y:y + h, x:x + w]
+            eyes = eye_cascade.detectMultiScale(roi_gray)
 
-    if len(imageDataFin) > faces_in_image_limit:
-        return []
-    else:
-        return imageDataFin
+            if len(eyes) >= 1:
+                im = resize(roi_color, (img_size, img_size))
+                imageDataFin.append(im)
+                #
+                # cv2.imshow(image, im)
+                # cv2.waitKey(1)
+
+    return imageDataFin
 
 
 def print_progress(total, current):
@@ -65,10 +68,11 @@ def process_folder(path, like_type):
 
         if not img.startswith('.'):
 
-            faces = extract_faces(cv2.imread(os.path.join(data_path, os.path.join(like_type, img))))
+            faces = extract_faces(os.path.join(data_path, os.path.join(like_type, img)))
 
             for face in faces:
                 images.append(face)
+
                 if like_type == 'likes':
                     labels.append(1)
                 else:
@@ -76,6 +80,7 @@ def process_folder(path, like_type):
 
             files_processed += 1
 
+    cv2.destroyAllWindows()
     print("\nProcessing of {} images complete".format(like_type))
 
 

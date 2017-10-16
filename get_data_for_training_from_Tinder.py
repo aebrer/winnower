@@ -17,6 +17,8 @@ print("Session started..")
 
 while True:
 
+    users = []
+
     try:
         users = session.nearby_users()
 

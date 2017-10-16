@@ -113,3 +113,6 @@ ENV/
 .idea/tinder_ai.iml
 .idea/vcs.xml
 .idea/workspace.xml
+/get_data_for_training_from_matches.py
+get_data_for_training_from_matches.py
+models/
