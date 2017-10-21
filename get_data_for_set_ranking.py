@@ -11,8 +11,15 @@ FBTOKEN = get_access_token(email, password)
 session = pynder.Session(facebook_id=FBID, facebook_token=FBTOKEN)
 print("Session started..")
 
+try:
+    seen_users_file = open("seen_users.txt", "r")
+    seen_users = [line.rstrip('\n') for line in seen_users_file]
+    seen_users_file.close()
+except:
+    seen_users = []
 
-seen_images = []
+seen_users_file = open("seen_users.txt", "a")
+
 counter = 1
 
 while counter <= 2000:
@@ -28,24 +35,27 @@ while counter <= 2000:
 
     for user in users:
 
-        try:
-            photos = user.get_photos()
-            images = []
+        if user.id not in seen_users:
+            try:
+                photos = user.get_photos()
+                images = []
+                repeat = False
 
-            for photo in photos:
+                for photo in photos:
 
-                if photo not in seen_images:
                     file = BytesIO(urlopen(photo).read())
                     image = im.open(file)
                     images.append(image)
 
-                seen_images.append(photo)
 
-            collage = generate_collage.generate_collage(images)
+                collage = generate_collage.generate_collage(images)
 
-            output_name = "unranked_sets/" + str(counter) + "_" + str(user.name) + "_" + str(user.age) + "_collage.jpg"
-            collage.save(output_name)
-            counter += 1
+                output_name = "unranked_sets/" + str(user.id) + "_" + str(user.name) + "_" + str(user.age) + "_collage.jpg"
+                collage.save(output_name)
+                seen_users_file.write(user.id)
+                seen_users.append(user.id)
+                print(counter)
+                counter += 1
 
-        except Exception as e:
-            print(e)
+            except Exception as e:
+                print(e)
