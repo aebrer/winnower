@@ -52,7 +52,7 @@ while counter <= 2000:
 
                 output_name = "unranked_sets/" + str(user.id) + "_" + str(user.name) + "_" + str(user.age) + "_collage.jpg"
                 collage.save(output_name)
-                seen_users_file.write(user.id)
+                seen_users_file.write(str(user.id) + "\n")
                 seen_users.append(user.id)
                 print(counter)
                 counter += 1
