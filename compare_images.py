@@ -84,7 +84,7 @@ class Display(object):
         self._fig.canvas.mpl_connect('key_press_event', self._on_key_press)
 
 
-photo_dir = "unranked_sets_testing/"
+photo_dir = "unranked_sets/"
 
 assert os.path.isdir(photo_dir)
 
