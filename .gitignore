@@ -116,3 +116,11 @@ ENV/
 /get_data_for_training_from_matches.py
 get_data_for_training_from_matches.py
 models/
+/get_profile_info.py
+/profile_info.json
+/seen_users.txt
+/compare_results.csv
+/unranked_sets_testing/
+/unranked_sets/
+/tf_files/
+/ranked_sets.csv

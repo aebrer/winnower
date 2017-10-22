@@ -18,11 +18,9 @@ try:
 except:
     seen_users = []
 
-seen_users_file = open("seen_users.txt", "a")
-
 counter = 1
 
-while counter <= 2000:
+while len(seen_users) <= 2000:
 
     users = []
 
@@ -34,7 +32,6 @@ while counter <= 2000:
         continue
 
     for user in users:
-
         if user.id not in seen_users:
             try:
                 photos = user.get_photos()
@@ -52,7 +49,8 @@ while counter <= 2000:
 
                 output_name = "unranked_sets/" + str(user.id) + "_" + str(user.name) + "_" + str(user.age) + "_collage.jpg"
                 collage.save(output_name)
-                seen_users_file.write(str(user.id) + "\n")
+                with open("seen_users.txt", "a") as seen_users_file:
+                    seen_users_file.write(str(user.id) + "\n")
                 seen_users.append(user.id)
                 print(counter)
                 counter += 1

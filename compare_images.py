@@ -80,6 +80,11 @@ class Display(object):
                 results.write(str(self.f1) + "," + str(self.f2) + "," + str(1) + "\n")
             plt.close(self._fig)
 
+        elif event.key == 'down':
+            with open(self.compare_results_file, "a") as results:
+                results.write(str(self.f1) + "," + str(self.f2) + "," + str(2) + "\n")
+            plt.close(self._fig)
+
     def _attach_callbacks(self):
         self._fig.canvas.mpl_connect('key_press_event', self._on_key_press)
 
@@ -89,23 +94,28 @@ photo_dir = "unranked_sets/"
 assert os.path.isdir(photo_dir)
 
 filelist = glob.glob(photo_dir + '*.jpg')
+random.shuffle(filelist)
 num_photos = len(filelist)
-combolist = combinations(filelist, 2)
+# combolist = combinations(filelist, 2)
+#
+# def random_combination(iterable, num_photos):
+#     "Random selection from itertools.combinations(iterable, r)"
+#     pool = tuple(iterable)
+#     n = len(pool)
+#     # need to get at least n*log(n) comparisons
+#     r = int(round(num_photos * np.log(num_photos))) + 1
+#     indices = random.sample(range(n), r)
+#     return tuple(pool[i] for i in indices)
+#
+#
+# rand_combo_list = random_combination(combolist, num_photos)
 
-def random_combination(iterable, num_photos):
-    "Random selection from itertools.combinations(iterable, r)"
-    pool = tuple(iterable)
-    n = len(pool)
-    # need to get at least n*log(n) comparisons
-    r = int(round(num_photos * np.log(num_photos))) + 1
-    indices = random.sample(range(n), r)
-    return tuple(pool[i] for i in indices)
+# for f1,f2 in rand_combo_list:
+#     # print(f1,f2)
+#     display = Display(f1, f2)
 
-
-rand_combo_list = random_combination(combolist, num_photos)
-
-for f1,f2 in rand_combo_list:
-    # print(f1,f2)
+for f1 in filelist:
+    f2 = f1
+    while f2 == f1:
+        f2 = random.choice(filelist)
     display = Display(f1, f2)
-
-
