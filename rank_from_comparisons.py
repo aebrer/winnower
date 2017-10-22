@@ -3,7 +3,7 @@ import glob
 import os
 import elo
 
-photo_dir = "unranked_sets_testing/"
+photo_dir = "unranked_sets/"
 assert os.path.isdir(photo_dir)
 
 filelist = glob.glob(photo_dir + '*.jpg')
@@ -11,7 +11,6 @@ filelist = glob.glob(photo_dir + '*.jpg')
 scores = {}  # assign random scores
 for file in filelist:
     scores[file] = 1200
-
 
 with open("compare_results.csv") as comparisons:
     for line in comparisons:
