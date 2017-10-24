@@ -32,7 +32,7 @@ def win_calc(competitor, records, alpha):
 
     else:
         # now update the score based on competitor scores
-        alpha = alpha * 0.9
+        alpha = alpha * 0.8
         for challenger in losers:
             provisional_score = provisional_score + win_calc(challenger, records, alpha)
 
@@ -62,7 +62,7 @@ def lose_calc(competitor, records, alpha):
 
     else:
         # now update the score based on competitor scores
-        alpha = alpha * 0.9
+        alpha = alpha * 0.8
         for challenger in winners:
             provisional_score = provisional_score + lose_calc(challenger, records, alpha)
 
@@ -71,7 +71,7 @@ def lose_calc(competitor, records, alpha):
     return lose_score
 
 
-def draw_calc(competitor, records, pre_draw_scores):
+def draw_calc(competitor, records):
 
     draw_score = 0.0
 
@@ -79,7 +79,7 @@ def draw_calc(competitor, records, pre_draw_scores):
         if records[competitor][challenger] == "draw":
             # a draw here represents a situation where there is enough uncertainty to make comparison difficult
             # it does not mean that they are actually equal
-            draw_score = ((pre_draw_scores[challenger] - pre_draw_scores[competitor]) / random.uniform(1.9, 2.1))
+            draw_score = win_calc(challenger, records, 0.8) + lose_calc(challenger, records, 0.8)
 
 
     return draw_score
@@ -109,18 +109,12 @@ with open("compare_results.csv") as comparison_file:
             comparisons[A][B] = "draw"
             comparisons[B][A] = "draw"
 
-win_scores = NestedDict()
-lose_scores = NestedDict()
-pre_draw_scores = NestedDict()
-final_scores = NestedDict()
+final_scores = {}
 
 for file in filelist:
-    win_scores[file] = win_calc(file, comparisons, 1.0)
-    lose_scores[file] = lose_calc(file, comparisons, 1.0)
-    pre_draw_scores[file] = win_scores[file] + lose_scores[file]
-
-for file in filelist:
-    final_scores[file] = pre_draw_scores[file] + draw_calc(file, comparisons, pre_draw_scores)
+    if comparisons[file] == {}:
+        print("No comparison yet exists for: " + file)
+    final_scores[file] = win_calc(file, comparisons, 1.0) + lose_calc(file, comparisons, 1.0) + draw_calc(file, comparisons)
 
 with open("ranked_sets.csv", "w") as ranked_output:
     for file in filelist:
