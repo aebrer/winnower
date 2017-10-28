@@ -11,16 +11,24 @@ class NestedDict(dict):
         return self[key]
 
 
-def win_calc(competitor, records, alpha):
+def win_calc(competitor, records, alpha, seen):
 
     provisional_score = 0.0
     losers = []
 
     for challenger in records[competitor]:
-        # record a win
-        if records[competitor][challenger] == "win":
-            provisional_score += 1.0
-            losers.append(challenger)
+        if ((competitor, challenger) not in seen) and ((challenger, competitor) not in seen):
+            # record a win
+            if records[competitor][challenger] == "win":
+                provisional_score += 1.0
+                losers.append(challenger)
+                seen.append((competitor, challenger))
+                seen.append((challenger, competitor))
+            elif records[competitor][challenger] == "draw":
+                seen.append((competitor, challenger))
+                seen.append((challenger, competitor))
+                provisional_score += win_calc(challenger, records, alpha * 0.7, seen)
+
 
     # update the score based on alpha
     provisional_score = provisional_score * alpha
@@ -32,25 +40,33 @@ def win_calc(competitor, records, alpha):
 
     else:
         # now update the score based on competitor scores
-        alpha = alpha * 0.8
+        alpha = alpha * 0.7
         for challenger in losers:
-            provisional_score = provisional_score + win_calc(challenger, records, alpha)
+            provisional_score = provisional_score + win_calc(challenger, records, alpha, seen)
 
         win_score = provisional_score
 
     return win_score
 
 
-def lose_calc(competitor, records, alpha):
+def lose_calc(competitor, records, alpha, seen):
 
     provisional_score = 0.0
     winners = []
 
     for challenger in records[competitor]:
-        # record a loss
-        if records[competitor][challenger] == "loss":
-            provisional_score -= 1.0
-            winners.append(challenger)
+        if ((competitor, challenger) not in seen) and ((challenger, competitor) not in seen):
+            # record a loss
+            if records[competitor][challenger] == "loss":
+                provisional_score -= 1.0
+                winners.append(challenger)
+                seen.append((competitor, challenger))
+                seen.append((challenger, competitor))
+            elif records[competitor][challenger] == "draw":
+                seen.append((competitor, challenger))
+                seen.append((challenger, competitor))
+                provisional_score -= lose_calc(challenger, records, alpha * 0.7, seen)
+
 
     # update the score based on alpha
     provisional_score = provisional_score * alpha
@@ -62,27 +78,15 @@ def lose_calc(competitor, records, alpha):
 
     else:
         # now update the score based on competitor scores
-        alpha = alpha * 0.8
+        alpha = alpha * 0.7
         for challenger in winners:
-            provisional_score = provisional_score + lose_calc(challenger, records, alpha)
+            provisional_score = provisional_score + lose_calc(challenger, records, alpha, seen)
 
         lose_score = provisional_score
 
     return lose_score
 
 
-def draw_calc(competitor, records):
-
-    draw_score = 0.0
-
-    for challenger in records[competitor]:
-        if records[competitor][challenger] == "draw":
-            # a draw here represents a situation where there is enough uncertainty to make comparison difficult
-            # it does not mean that they are actually equal
-            draw_score = win_calc(challenger, records, 0.8) + lose_calc(challenger, records, 0.8)
-
-
-    return draw_score
 
 
 photo_dir = "unranked_sets/"
@@ -114,7 +118,8 @@ final_scores = {}
 for file in filelist:
     if comparisons[file] == {}:
         print("No comparison yet exists for: " + file)
-    final_scores[file] = win_calc(file, comparisons, 1.0) + lose_calc(file, comparisons, 1.0) + draw_calc(file, comparisons)
+    seen = []
+    final_scores[file] = win_calc(file, comparisons, 1.0, seen) + lose_calc(file, comparisons, 1.0, seen)
 
 with open("ranked_sets.csv", "w") as ranked_output:
     for file in filelist:
