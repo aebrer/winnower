@@ -100,16 +100,20 @@ num_photos = len(filelist)
 scores = {}
 
 with open("ranked_sets.csv", "r") as ranked_list:
+
+    counter = 1.0
+
     for line in ranked_list:
         line = line.rstrip()
         file = line.split(",")[0]
         score = abs(float(line.split(",")[1]))
 
-        int_score = round(float(score))
-        float_score = float(score)
-        diff = abs(float_score - int_score)
+        num_files = len(filelist)
 
-        if diff == 0:
+        percent = round((counter / float(num_files)) * 100, 2)
+        print("Prechecking images for poorly compared induviduals:", percent, "percent done.")
+
+        if len(str(score)) < 16:
             f2 = random.choice(filelist)
             while f2 == file:
                 f2 = random.choice(filelist)
@@ -119,6 +123,7 @@ with open("ranked_sets.csv", "r") as ranked_list:
             scores[score] = [file]
         else:
             scores[score].append(file)
+        counter += 1.0
 
 total_len = len(scores)
 counter = 1.0
