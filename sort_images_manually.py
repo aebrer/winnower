@@ -5,6 +5,8 @@ import glob
 from itertools import combinations
 import random
 import numpy as np
+from shutil import copyfile
+
 
 
 class Display(object):
@@ -21,14 +23,11 @@ class Display(object):
 
     """
 
-    def __init__(self, f1, f2, compare_results_file="compare_results.csv", title = None, figsize = None):
+    def __init__(self, f1, title = None, figsize = None):
 
-        self.compare_results_file = compare_results_file
         self.f1 = f1
-        self.f2 = f2
 
         im1 = im.open(f1)
-        im2 = im.open(f2)
 
         if figsize is None:
             figsize = [20,12]
@@ -37,8 +36,7 @@ class Display(object):
 
         h = 10
 
-        ax11 = plt.subplot2grid((h,2), (0,0), rowspan = h - 1)
-        ax12 = plt.subplot2grid((h,2), (0,1), rowspan = h - 1)
+        ax11 = plt.subplot2grid((h,1), (0,0), rowspan = h)
 
         self._fig = fig
 
@@ -52,9 +50,8 @@ class Display(object):
         )
 
         ax11.imshow(im1)
-        ax12.imshow(im2)
 
-        for ax in [ax11, ax12]:
+        for ax in [ax11]:
             ax.set_xticklabels([])
             ax.set_yticklabels([])
 
@@ -71,18 +68,18 @@ class Display(object):
     def _on_key_press(self, event):
 
         if event.key == 'left':
-            with open(self.compare_results_file, "a") as results:
-                results.write(str(self.f1) + "," + str(self.f2) + "," + str(0) + "\n")
+            filename = f1.split("/")[1]
+            copyfile(f1, "manual_sort/dislike/" + filename)
             plt.close(self._fig)
 
         elif event.key == 'right':
-            with open(self.compare_results_file, "a") as results:
-                results.write(str(self.f1) + "," + str(self.f2) + "," + str(1) + "\n")
+            filename = f1.split("/")[1]
+            copyfile(f1, "manual_sort/like/" + filename)
             plt.close(self._fig)
 
         elif event.key == 'down':
-            with open(self.compare_results_file, "a") as results:
-                results.write(str(self.f1) + "," + str(self.f2) + "," + str(2) + "\n")
+            filename = f1.split("/")[1]
+            copyfile(f1, "manual_sort/neutral/" + filename)
             plt.close(self._fig)
 
     def _attach_callbacks(self):
@@ -96,23 +93,7 @@ assert os.path.isdir(photo_dir)
 filelist = glob.glob(photo_dir + '*.jpg')
 random.shuffle(filelist)
 num_photos = len(filelist)
-# combolist = combinations(filelist, 2)
-#
-# def random_combination(iterable, num_photos):
-#     "Random selection from itertools.combinations(iterable, r)"
-#     pool = tuple(iterable)
-#     n = len(pool)
-#     # need to get at least n*log(n) comparisons
-#     r = int(round(num_photos * np.log(num_photos))) + 1
-#     indices = random.sample(range(n), r)
-#     return tuple(pool[i] for i in indices)
-#
-#
-# rand_combo_list = random_combination(combolist, num_photos)
 
-# for f1,f2 in rand_combo_list:
-#     # print(f1,f2)
-#     display = Display(f1, f2)
 num_files = len(filelist)
 counter = 1.0
 for f1 in filelist:
@@ -120,9 +101,6 @@ for f1 in filelist:
     percent = round((counter / float(num_files)) * 100, 2)
     print("Comparing images one-at-a-time:", percent, "percent done.")
 
-    f2 = f1
-    while f2 == f1:
-        f2 = random.choice(filelist)
-    display = Display(f1, f2)
+    display = Display(f1)
 
     counter += 1.0

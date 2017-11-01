@@ -27,7 +27,7 @@ def win_calc(competitor, records, alpha, seen):
             elif records[competitor][challenger] == "draw":
                 seen.append((competitor, challenger))
                 seen.append((challenger, competitor))
-                provisional_score += win_calc(challenger, records, alpha * 0.98, seen)
+                provisional_score += win_calc(challenger, records, alpha * 0.4, seen)
 
 
     # update the score based on alpha
@@ -40,7 +40,7 @@ def win_calc(competitor, records, alpha, seen):
 
     else:
         # now update the score based on competitor scores
-        alpha = alpha * 0.98
+        alpha = alpha * 0.4
         for challenger in losers:
             provisional_score = provisional_score + win_calc(challenger, records, alpha, seen)
 
@@ -65,7 +65,7 @@ def lose_calc(competitor, records, alpha, seen):
             elif records[competitor][challenger] == "draw":
                 seen.append((competitor, challenger))
                 seen.append((challenger, competitor))
-                provisional_score -= lose_calc(challenger, records, alpha * 0.98, seen)
+                provisional_score -= lose_calc(challenger, records, alpha * 0.4, seen)
 
 
     # update the score based on alpha
@@ -78,7 +78,7 @@ def lose_calc(competitor, records, alpha, seen):
 
     else:
         # now update the score based on competitor scores
-        alpha = alpha * 0.98
+        alpha = alpha * 0.4
         for challenger in winners:
             provisional_score = provisional_score + lose_calc(challenger, records, alpha, seen)
 

@@ -17,12 +17,12 @@ assert os.path.isdir(photo_dir)
 filelist = glob.glob(photo_dir + '*.jpg')
 for file in filelist:
     os.remove(file)
-
-photo_dir = "ranked_sets/neutral/"
-assert os.path.isdir(photo_dir)
-filelist = glob.glob(photo_dir + '*.jpg')
-for file in filelist:
-    os.remove(file)
+#
+# photo_dir = "ranked_sets/neutral/"
+# assert os.path.isdir(photo_dir)
+# filelist = glob.glob(photo_dir + '*.jpg')
+# for file in filelist:
+#     os.remove(file)
 
 ranked_sets = open("ranked_sets.csv", "r")
 
@@ -69,7 +69,7 @@ for file in good_files:
 for file in bad_files:
     filename = file.split("/")[1]
     copyfile(file, "ranked_sets/dislike/" + filename)
-
-for file in neutral_files:
-    filename = file.split("/")[1]
-    copyfile(file, "ranked_sets/neutral/" + filename)
+#
+# for file in neutral_files:
+#     filename = file.split("/")[1]
+#     copyfile(file, "ranked_sets/neutral/" + filename)
