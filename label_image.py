@@ -1,3 +1,7 @@
+"""
+Script to get the labels for the AI
+"""
+
 # Copyright 2017 The TensorFlow Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -92,9 +96,10 @@ def use_model(model_file, file_name):
   results = np.squeeze(results)
 
   top_k = results.argsort()[-5:][::-1]
-  labels = ["dislike", "like"]
-  final_results = []
-  for i in top_k:
-    final_results.append((labels[i], results[i]))
+  with open("tf_files/retrained_labels.txt") as labels_file:
+    labels = labels_file.readlines()
+    final_results = []
+    for i in top_k:
+      final_results.append((labels[i].rstrip(), results[i]))
   return final_results
 

@@ -1,10 +1,12 @@
+"""
+A script to just take every image in the unranked_sets, and just move them to the right folder (like, dislike, or neutral)
+"""
+
 import matplotlib.pyplot as plt
 from PIL import Image as im
 import os
 import glob
-from itertools import combinations
 import random
-import numpy as np
 from shutil import copyfile
 
 

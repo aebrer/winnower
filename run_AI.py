@@ -1,3 +1,8 @@
+"""
+This is where the magic happens, the script that actually runs the swiping AI.
+"""
+
+
 from PIL import Image as im
 import pynder
 from pynder_helpers import get_access_token, get_login_credentials
@@ -51,13 +56,13 @@ while True:
                 print(user.name, user.age, choice_type, prediction)
 
 
-                if choice_type == "like":
+                if choice_type == "like" and prediction > 0.6:
 
                     output_name = "automatically_liked/" + str(user.id) + "_" + str(user.name) + "_" + str(user.age) + "_" + str(prediction) + "_collage.jpg"
                     # user.like()
                     print(output_name)
-                    # collage.save(output_name)
-                    if prediction >= 0.99:
+                    collage.save(output_name)
+                    if prediction >= 0.995:
                         try:
                             print(user.superlike())
                             try:
@@ -69,12 +74,12 @@ while True:
                     else:
                         print(user.like())
 
-                elif choice_type == "dislike":
+                else:
                     output_name = "automatically_disliked/" + str(user.id) + "_" + str(user.name) + "_" + str(
-                        user.age) + "_" + str(prediction) + "_collage.jpg"
+                        user.age) + "_" + str(choice_type) + "_"+ str(prediction) + "_collage.jpg"
                     # user.dislike()
                     print(output_name)
-                    # collage.save(output_name)
+                    collage.save(output_name)
                     print(user.dislike())
 
 

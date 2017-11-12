@@ -1,11 +1,13 @@
+"""
+Show a bunch of neutral images, and what the AI thinks they would be rated. A good test.
+"""
+
+
 import matplotlib.pyplot as plt
 from PIL import Image as im
 import os
 import glob
-from itertools import combinations
 import random
-import numpy as np
-from shutil import copyfile
 import label_image
 
 

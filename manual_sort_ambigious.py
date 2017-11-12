@@ -1,27 +1,16 @@
+"""
+Get images that confuse the AI, and manually sort them. Goal, to improve the quality of the AI training.
+"""
+
+
 import matplotlib.pyplot as plt
 from PIL import Image as im
-import os
 import glob
-from itertools import combinations
-import random
-import numpy as np
 from shutil import copyfile
 
 
 
 class Display(object):
-
-    """
-    Given two photos, displays them with Matplotlib and provides a graphical
-    means of choosing the better photo.
-
-    Click on the select button to pick the better photo.
-
-    ~OR~
-
-    Press the left or right arrow key to pick the better photo.
-
-    """
 
     def __init__(self, f1, title = None, figsize = None):
 

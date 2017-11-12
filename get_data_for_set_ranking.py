@@ -1,3 +1,8 @@
+"""
+Will connect to Tinder, and will download all the images of a user, make a collage, and save it. Will run until stopped.
+"""
+
+
 from PIL import Image as im
 import pynder
 from pynder_helpers import get_access_token, get_login_credentials
@@ -11,6 +16,7 @@ FBTOKEN = get_access_token(email, password)
 session = pynder.Session(facebook_id=FBID, facebook_token=FBTOKEN)
 print("Session started..")
 
+# keep a cache of already seen profiles, so as to avoid duplicates
 try:
     seen_users_file = open("seen_users.txt", "r")
     seen_users = [line.rstrip('\n') for line in seen_users_file]
@@ -20,6 +26,7 @@ except:
 
 counter = 1
 
+# no clear reason to me why this doesn't work, and it's not worth figuring out.
 while len(seen_users) <= 2000:
 
     users = []
@@ -44,9 +51,10 @@ while len(seen_users) <= 2000:
                     image = im.open(file)
                     images.append(image)
 
-
+                # make collage
                 collage = generate_collage.generate_collage(images)
 
+                # save collage
                 output_name = "unranked_sets/" + str(user.id) + "_" + str(user.name) + "_" + str(user.age) + "_collage.jpg"
                 collage.save(output_name)
                 with open("seen_users.txt", "a") as seen_users_file:

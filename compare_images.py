@@ -2,11 +2,10 @@ import matplotlib.pyplot as plt
 from PIL import Image as im
 import os
 import glob
-from itertools import combinations
 import random
-import numpy as np
 
-
+# a display class that will allow us to speed up the comparisons
+# left key, left wins, right key right wins, down key is a draw
 class Display(object):
 
     """
@@ -89,37 +88,25 @@ class Display(object):
         self._fig.canvas.mpl_connect('key_press_event', self._on_key_press)
 
 
+# just a convenience
 photo_dir = "unranked_sets/"
-
 assert os.path.isdir(photo_dir)
 
+# get all the images to compare
 filelist = glob.glob(photo_dir + '*.jpg')
+# put them in a random order
 random.shuffle(filelist)
+# how many are there?
 num_photos = len(filelist)
-# combolist = combinations(filelist, 2)
-#
-# def random_combination(iterable, num_photos):
-#     "Random selection from itertools.combinations(iterable, r)"
-#     pool = tuple(iterable)
-#     n = len(pool)
-#     # need to get at least n*log(n) comparisons
-#     r = int(round(num_photos * np.log(num_photos))) + 1
-#     indices = random.sample(range(n), r)
-#     return tuple(pool[i] for i in indices)
-#
-#
-# rand_combo_list = random_combination(combolist, num_photos)
 
-# for f1,f2 in rand_combo_list:
-#     # print(f1,f2)
-#     display = Display(f1, f2)
-num_files = len(filelist)
 counter = 1.0
+# see every photo at least once
 for f1 in filelist:
 
-    percent = round((counter / float(num_files)) * 100, 2)
+    percent = round((counter / float(num_photos)) * 100, 2)
     print("Comparing images one-at-a-time:", percent, "percent done.")
 
+    # get a random image that isn't the current image
     f2 = f1
     while f2 == f1:
         f2 = random.choice(filelist)

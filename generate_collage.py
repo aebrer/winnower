@@ -1,6 +1,8 @@
-import os.path
-import sys
-from time import strftime
+"""
+A script to turn a set of images into a randomly laid out collage. Important in order to train on the whole profile 
+at once, rather than one at a time.
+"""
+
 from PIL import Image as im
 
 

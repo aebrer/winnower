@@ -125,3 +125,5 @@ models/
 /tf_files/
 /ranked_sets.csv
 /ranked_sets/
+/inception_two_class_model.pb
+/inception_two_class_model_autotrained_backup_dislike,like.pb

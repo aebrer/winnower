@@ -1,25 +1,16 @@
+"""
+This script is designed to be run after the sets of images have been ranked. It will search for poorly compared
+images and enforce a comparison. The goal here is to increase the total connectedness of the network.
+"""
+
 import matplotlib.pyplot as plt
 from PIL import Image as im
 import os
 import glob
-from itertools import combinations
 import random
-import numpy as np
 
 
 class Display(object):
-
-    """
-    Given two photos, displays them with Matplotlib and provides a graphical
-    means of choosing the better photo.
-
-    Click on the select button to pick the better photo.
-
-    ~OR~
-
-    Press the left or right arrow key to pick the better photo.
-
-    """
 
     def __init__(self, f1, f2, compare_results_file="compare_results.csv", title = None, figsize = None):
 
@@ -113,12 +104,15 @@ with open("ranked_sets.csv", "r") as ranked_list:
         percent = round((counter / float(num_files)) * 100, 2)
         print("Prechecking images for poorly compared induviduals:", percent, "percent done.")
 
+        # if the length of the number is low, it is likely because it has only been involved in a few comparisons
         if len(str(score)) < 16:
             f2 = random.choice(filelist)
             while f2 == file:
                 f2 = random.choice(filelist)
             display = Display(file, f2)
 
+        # create a dictionary of the sets of images, where the keys are the scores
+        # thus, images will be placed into lists when they have the same score
         if score not in scores:
             scores[score] = [file]
         else:
@@ -128,6 +122,7 @@ with open("ranked_sets.csv", "r") as ranked_list:
 total_len = len(scores)
 counter = 1.0
 
+# if two images have the same score, compare them to others not in the same set
 for score in scores:
     percent = round((counter / float(total_len)) * 100, 2)
     print("Now comparing scores:", percent, "percent done.")

@@ -1,4 +1,8 @@
-import random
+"""
+A script to take a set of incomplete pairwise comparisons, and recursively "pseudocompare" them, in order to make
+a single ranked list.
+"""
+
 import glob
 import os
 
@@ -10,7 +14,7 @@ class NestedDict(dict):
         self[key] = NestedDict()
         return self[key]
 
-
+# function to calculate the WIN score
 def win_calc(competitor, records, alpha, seen):
 
     provisional_score = 0.0
@@ -24,6 +28,7 @@ def win_calc(competitor, records, alpha, seen):
                 losers.append(challenger)
                 seen.append((competitor, challenger))
                 seen.append((challenger, competitor))
+            # if it's a draw, treat is like a win worth no points (and a lower alpha on the next level of depth
             elif records[competitor][challenger] == "draw":
                 seen.append((competitor, challenger))
                 seen.append((challenger, competitor))
@@ -34,10 +39,12 @@ def win_calc(competitor, records, alpha, seen):
     provisional_score = provisional_score * alpha
 
     # check for base case here
+    # stop recursion if the score is too low
     if provisional_score <= 0.01:
         win_score = provisional_score
         return win_score
 
+    # go through and get the scores of all the wins of each loser
     else:
         # now update the score based on competitor scores
         alpha = alpha * 0.4
@@ -49,6 +56,7 @@ def win_calc(competitor, records, alpha, seen):
     return win_score
 
 
+# same as the win score function, but for losing. It's the same, but in the opposite direction
 def lose_calc(competitor, records, alpha, seen):
 
     provisional_score = 0.0
@@ -88,12 +96,12 @@ def lose_calc(competitor, records, alpha, seen):
 
 
 
-
+# get the filelist of unranked images
 photo_dir = "unranked_sets/"
 assert os.path.isdir(photo_dir)
 filelist = glob.glob(photo_dir + '*.jpg')
 
-
+# get all the comparisons
 comparisons = NestedDict()
 with open("compare_results.csv") as comparison_file:
     for line in comparison_file:
@@ -115,12 +123,14 @@ with open("compare_results.csv") as comparison_file:
 
 final_scores = {}
 
+# get a score for each collage in the filelist
 for file in filelist:
     if comparisons[file] == {}:
         print("No comparison yet exists for: " + file)
     seen = []
     final_scores[file] = win_calc(file, comparisons, 1.0, seen) + lose_calc(file, comparisons, 1.0, seen)
 
+# save the ranked list as the result
 with open("ranked_sets.csv", "w") as ranked_output:
     for file in filelist:
         ranked_output.write(str(file) + "," + str(final_scores[file]) + "\n")
