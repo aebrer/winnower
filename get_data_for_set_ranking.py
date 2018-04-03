@@ -5,15 +5,13 @@ Will connect to Tinder, and will download all the images of a user, make a colla
 
 from PIL import Image as im
 import pynder
-from pynder_helpers import get_access_token, get_login_credentials
 import generate_collage
 from urllib.request import urlopen
 from io import BytesIO
+import time
+import random
 
-
-email, password, FBID = get_login_credentials()
-FBTOKEN = get_access_token(email, password)
-session = pynder.Session(facebook_id=FBID, facebook_token=FBTOKEN)
+session = pynder.Session(XAuthToken="d3f82ed5-13af-4dd2-9eed-01f88d78edfe")
 print("Session started..")
 
 # keep a cache of already seen profiles, so as to avoid duplicates
@@ -39,17 +37,23 @@ while len(seen_users) <= 2000:
         continue
 
     for user in users:
+        time.sleep(random.randint(3, 15))
         if user.id not in seen_users:
             try:
                 photos = user.get_photos()
                 images = []
                 repeat = False
 
+                photo_num = 1
                 for photo in photos:
 
                     file = BytesIO(urlopen(photo).read())
                     image = im.open(file)
+                    output_name_single = "unranked_single/" + str(user.id) + "_" + str(user.name) + "_" + str(
+                        user.age) + "_" + str(photo_num) + ".jpg"
+                    image.save(output_name_single)
                     images.append(image)
+                    photo_num += 1
 
                 # make collage
                 collage = generate_collage.generate_collage(images)

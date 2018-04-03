@@ -79,7 +79,7 @@ class Display(object):
 disliked = glob.glob("automatically_disliked/*.jpg")
 ambi_dislike = []
 for file in disliked:
-    if float(file.split("_")[4]) < 0.55:
+    if float(file.split("_")[1].split("/")[1]) < 0.6:
         ambi_dislike.append(file)
 
 num_files = len(ambi_dislike)
@@ -95,7 +95,7 @@ for f1 in ambi_dislike:
 liked = glob.glob("automatically_liked/*.jpg")
 ambi_like = []
 for file in liked:
-    if float(file.split("_")[4]) < 0.55:
+    if float(file.split("_")[1].split("/")[1]) < 0.6:
         ambi_like.append(file)
 
 num_files = len(ambi_like)
