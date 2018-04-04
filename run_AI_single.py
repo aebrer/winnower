@@ -15,14 +15,14 @@ import random
 import numpy as np
 
 
-session = pynder.Session(XAuthToken="NULL")
+session = pynder.Session(XAuthToken="")
 print("Session started..")
 
 import json
 print(json.dumps(session._api.profile(), sort_keys=True, indent=2))
 
 counter = 1
-swipe_scores = []  # where to store all the swipe scores
+# swipe_scores = []  # where to store all the swipe scores
 
 while True:
 
@@ -79,28 +79,30 @@ while True:
                 scores.append(-1)
 
             swipe_score = np.sum(scores)
-            swipe_scores.append(swipe_score)
+            # swipe_scores.append(swipe_score)
 
-            if len(swipe_scores) < 20:
-                if swipe_score > 3:
-                    decision = True
-                else:
-                    decision = False
+            # if len(swipe_scores) < 20:
+            if swipe_score > 4.05:  # this is the median of 2500 scores
+                decision = True
             else:
-                if swipe_score > np.median(swipe_scores):
-                    decision = True
-                else:
-                    decision = False
-
-            if decision:
-                print(user.like())
-            else:
-                print(user.dislike())
+                decision = False
+            # else:
+            #     if swipe_score > np.median(swipe_scores):
+            #         decision = True
+            #     else:
+            #         decision = False
 
             print(user.name, user.age, scores, swipe_score, decision)
             output_name = "single_results/" + str(decision) + "_" + str(swipe_score) + "_" + str(user.name) + "_" + str(
                 user.age) + "_" + str(user.id) + "_collage.jpg"
             collage.save(output_name)
 
+            if decision:
+                print(user.like())
+            else:
+                print(user.dislike())
+
         except Exception as e:
             print(e)
+
+    counter += 1
