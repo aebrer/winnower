@@ -51,12 +51,15 @@ while True:
             images = []
             repeat = False
             scores = []
+            photo_num = 1
             for photo in photos:
                 file = BytesIO(urlopen(photo).read())
                 image = im.open(file)
-                image.save("tmp.jpg")
-                results = label_image.use_model("inception_two_class_model_single.pb", "tmp.jpg")
-                os.remove("tmp.jpg")
+                output_name_single = "unranked_single/" + str(user.id) + "_" + str(user.name) + "_" + str(
+                    user.age) + "_" + str(photo_num) + ".jpg"
+                image.save(output_name_single)
+                results = label_image.use_model("inception_two_class_model_single.pb", output_name_single)
+                photo_num += 1
 
                 like = 0.0
                 dislike = 0.0
@@ -82,9 +85,9 @@ while True:
             # swipe_scores.append(swipe_score)
 
             # if len(swipe_scores) < 20:
-            if swipe_score > 100:
+            if swipe_score > 75:
                 decision = "super"
-            elif swipe_score > 4.05:  # this is the median of 2500 scores
+            elif swipe_score > 6:  # chosen to be a little pickier
                 decision = "like"
             else:
                 decision = "dislike"

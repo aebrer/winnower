@@ -55,12 +55,6 @@ while len(seen_users) <= 2000:
                     images.append(image)
                     photo_num += 1
 
-                # make collage
-                collage = generate_collage.generate_collage(images)
-
-                # save collage
-                output_name = "unranked_sets/" + str(user.id) + "_" + str(user.name) + "_" + str(user.age) + "_collage.jpg"
-                collage.save(output_name)
                 with open("seen_users.txt", "a") as seen_users_file:
                     seen_users_file.write(str(user.id) + "\n")
                 seen_users.append(user.id)
