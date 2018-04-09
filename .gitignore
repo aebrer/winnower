@@ -127,3 +127,4 @@ models/
 /ranked_sets/
 /inception_two_class_model.pb
 /inception_two_class_model_autotrained_backup_dislike,like.pb
+/results.tsv

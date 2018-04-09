@@ -1,7 +1,7 @@
 library(ggplot2)
 library(ggthemes)
 
-mydata = read.csv("tmp.tsv", stringsAsFactors=F, sep = "\t", header=F)
+mydata = read.csv("results.tsv", stringsAsFactors=F, sep = "\t", header=F)
 head(mydata)
 names(mydata) = c("liked", "score", "name", "age", "id", "rm")
 mydata$rm = NULL
