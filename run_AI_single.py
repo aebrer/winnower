@@ -82,10 +82,12 @@ while True:
             # swipe_scores.append(swipe_score)
 
             # if len(swipe_scores) < 20:
-            if swipe_score > 4.05:  # this is the median of 2500 scores
-                decision = True
+            if swipe_score > 100:
+                decision = "super"
+            elif swipe_score > 4.05:  # this is the median of 2500 scores
+                decision = "like"
             else:
-                decision = False
+                decision = "dislike"
             # else:
             #     if swipe_score > np.median(swipe_scores):
             #         decision = True
@@ -97,7 +99,16 @@ while True:
                 user.age) + "_" + str(user.id) + "_collage.jpg"
             collage.save(output_name)
 
-            if decision:
+            if decision == "super":
+                try:
+                    print(user.superlike())
+                    try:
+                        print(user.like())
+                    except:
+                        pass
+                except:
+                    pass
+            elif decision == "like":
                 print(user.like())
             else:
                 print(user.dislike())
