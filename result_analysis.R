@@ -3,12 +3,13 @@ library(ggthemes)
 
 mydata = read.csv("results.tsv", stringsAsFactors=F, sep = "\t", header=F)
 head(mydata)
-names(mydata) = c("liked", "score", "name", "age", "id", "rm")
+names(mydata) = c("rm1","rm2","liked", "score", "name", "age", "id", "rm")
 mydata$rm = NULL
-mydata$liked[mydata$liked == "True"] = 1
+mydata$rm1 = NULL
+mydata$rm2 = NULL
 mydata$liked[mydata$liked == "like"] = 1
+mydata$liked[mydata$liked == "super"] = 1
 mydata$liked[mydata$liked == "dislike"] = 0
-mydata$liked[mydata$liked == "False"] = 0
 mydata$liked = as.numeric(mydata$liked)
 
 ggplot(mydata) +

@@ -11,7 +11,7 @@ from io import BytesIO
 import time
 import random
 
-session = pynder.Session(XAuthToken="d3f82ed5-13af-4dd2-9eed-01f88d78edfe")
+session = pynder.Session(XAuthToken="")
 print("Session started..")
 
 # keep a cache of already seen profiles, so as to avoid duplicates
@@ -24,7 +24,6 @@ except:
 
 counter = 1
 
-# no clear reason to me why this doesn't work, and it's not worth figuring out.
 while len(seen_users) <= 2000:
 
     users = []
@@ -60,6 +59,13 @@ while len(seen_users) <= 2000:
                 seen_users.append(user.id)
                 print(counter)
                 counter += 1
+
+                bio_output = "unranked_bio/" + str(user.name) + "_" + str(
+                    user.age) + "_" + str(user.id) + "_bio.txt"
+                with open(bio_output, "w") as biofile:
+                    if user.bio != "":
+                        for line in user.bio:
+                            biofile.write(line)
 
             except Exception as e:
                 print(e)

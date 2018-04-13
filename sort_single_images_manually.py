@@ -7,7 +7,7 @@ from PIL import Image as im
 import os
 import glob
 import random
-from shutil import copyfile
+from shutil import copyfile, move
 
 
 
@@ -71,17 +71,20 @@ class Display(object):
 
         if event.key == 'left':
             filename = f1.split("/")[1]
-            copyfile(f1, "manual_sort_single/dislike/" + filename)
+            print(filename)
+            move(f1, "manual_sort_single/dislike/" + filename)
             plt.close(self._fig)
 
         elif event.key == 'right':
             filename = f1.split("/")[1]
-            copyfile(f1, "manual_sort_single/like/" + filename)
+            print(filename)
+            move(f1, "manual_sort_single/like/" + filename)
             plt.close(self._fig)
 
         elif event.key == 'down':
             filename = f1.split("/")[1]
-            copyfile(f1, "manual_sort_single/neutral/" + filename)
+            print(filename)
+            move(f1, "manual_sort_single/neutral/" + filename)
             plt.close(self._fig)
 
     def _attach_callbacks(self):

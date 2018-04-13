@@ -45,7 +45,7 @@ while True:
     print("Got user, analyzing.")
 
     for user in users:
-        time.sleep(random.randint(3, 15))
+        time.sleep(random.randint(1, 5))
         try:
             photos = user.get_photos()
             images = []
@@ -68,12 +68,13 @@ while True:
                 for result in results:
                     if result[0] == "like":
                         like = result[1]
-                    if result[0] == "dislike":
+                    elif result[0] == "dislike":
                         dislike = result[1]
-                    if result[0] == "neutral":
-                        neutral = result[1]
-
-                score = like / (np.mean([dislike, neutral]))
+                    else:
+                        neutral += result[1]
+                neutral = max(neutral, 0.005)
+                score = (like - dislike**2) / neutral
+                score = round(score, 3)
                 scores.append(score)
                 images.append(image)
             collage = generate_collage.generate_collage(images)
@@ -82,25 +83,35 @@ while True:
                 scores.append(-1)
 
             swipe_score = np.sum(scores)
+            swipe_score = round(float(swipe_score), 3)
             # swipe_scores.append(swipe_score)
 
             # if len(swipe_scores) < 20:
-            if swipe_score > 75:
+            if swipe_score > 250:
                 decision = "super"
-            elif swipe_score > 6:  # chosen to be a little pickier
+            elif swipe_score > 0.5:  # chosen to be a little pickier
                 decision = "like"
             else:
                 decision = "dislike"
             # else:
-            #     if swipe_score > np.median(swipe_scores):
-            #         decision = True
+            #     if swipe_score > 200:
+            #         decision = "super"
+            #     elif swipe_score > np.median(swipe_scores):
+            #         decision = "like"
             #     else:
-            #         decision = False
+            #         decision = "dislike"
 
             print(user.name, user.age, scores, swipe_score, decision)
             output_name = "single_results/" + str(decision) + "_" + str(swipe_score) + "_" + str(user.name) + "_" + str(
                 user.age) + "_" + str(user.id) + "_collage.jpg"
             collage.save(output_name)
+
+            bio_output = "unranked_bio/" + str(user.name) + "_" + str(
+                user.age) + "_" + str(user.id) + "_bio.txt"
+            with open(bio_output, "w") as biofile:
+                if user.bio != "":
+                    for line in user.bio:
+                        biofile.write(line)
 
             if decision == "super":
                 try:
